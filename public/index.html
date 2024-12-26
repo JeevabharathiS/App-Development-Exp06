@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible=IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Records App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Student by Roll Number</h1>
+        <form id="searchForm">
+            <input type="text" id="rollNumber" placeholder="Enter roll number" required>
+            <button type="submit">Search</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const rollNumber = document.getElementById('rollNumber').value;
+
+            fetch(`/getStudent?rollNumber=${rollNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    const result = document.getElementById('result');
+                    result.innerHTML = '';
+                    if (data.error) {
+                        result.innerHTML = `<p>${data.error}</p>`;
+                    } else {
+                        result.innerHTML = `
+                            <p><strong>Roll Number:</strong> ${data.rollNumber}</p>
+                            <p><strong>Name:</strong> ${data.name}</p>
+                        `;
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+        });
+    </script>
+</body>
+</html>
